@@ -12,9 +12,7 @@ on:
 jobs:
   build:
 
-    permissions:
-      contents: read
-    runs-on: macos-latest
+    runs-on: ipados26-latest
 
     steps:
     - uses: actions/checkout@v4
