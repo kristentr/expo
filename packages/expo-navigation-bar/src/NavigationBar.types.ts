@@ -3,6 +3,8 @@
  *
  * - `dark` makes buttons **darker** to adjust for a mostly light nav bar.
  * - `light` makes buttons **lighter** to adjust for a mostly dark nav bar.
+ *
+ * @deprecated This will be removed in a future release.
  */
 export type NavigationBarButtonStyle = 'light' | 'dark';
 
@@ -13,11 +15,13 @@ export type NavigationBarVisibility = 'visible' | 'hidden';
 
 /**
  * Interaction behavior for the system navigation bar.
+ * @deprecated This will be removed in a future release.
  */
 export type NavigationBarBehavior = 'overlay-swipe' | 'inset-swipe' | 'inset-touch';
 
 /**
  * Navigation bar positional mode.
+ * @deprecated This will be removed in a future release.
  */
 export type NavigationBarPosition = 'relative' | 'absolute';
 

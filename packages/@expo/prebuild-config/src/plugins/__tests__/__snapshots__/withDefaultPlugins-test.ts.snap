@@ -229,10 +229,6 @@ exports[`built-in plugins compiles mods 1`] = `
       },
     },
     "pluginHistory": {
-      "expo-ads-admob": {
-        "name": "expo-ads-admob",
-        "version": "UNVERSIONED",
-      },
       "expo-apple-authentication": {
         "name": "expo-apple-authentication",
         "version": "UNVERSIONED",
@@ -243,10 +239,6 @@ exports[`built-in plugins compiles mods 1`] = `
       },
       "expo-document-picker": {
         "name": "expo-document-picker",
-        "version": "UNVERSIONED",
-      },
-      "expo-navigation-bar": {
-        "name": "expo-navigation-bar",
         "version": "UNVERSIONED",
       },
       "expo-notifications": {
@@ -395,7 +387,6 @@ exports[`built-in plugins compiles mods 1`] = `
         },
       ],
       "CFBundleVersion": "6.5.0",
-      "GADApplicationIdentifier": "TEST_googleMobileAdsAppId",
       "GMSApiKey": "TEST_googleMapsApiKey",
       "ITSAppUsesNonExemptEncryption": true,
       "LSMinimumSystemVersion": "12.0",
@@ -405,7 +396,6 @@ exports[`built-in plugins compiles mods 1`] = `
         "NSAllowsLocalNetworking": true,
       },
       "NSLocationWhenInUseUsageDescription": "Allow $(PRODUCT_NAME) to access your location",
-      "RCTNewArchEnabled": true,
       "UILaunchStoryboardName": "SplashScreen",
       "UIRequiredDeviceCapabilities": [
         "arm64",
@@ -441,13 +431,6 @@ exports[`built-in plugins compiles mods 1`] = `
     },
   },
   "name": "my cool app",
-  "notification": {
-    "androidCollapsedTitle": "#{unread_notifications} new interactions",
-    "androidMode": "collapse",
-    "color": "green",
-    "icon": "./icons/notification-icon.png",
-    "iosDisplayInForeground": true,
-  },
   "orientation": "default",
   "packagerOpts": {
     "extraThing": true,
@@ -496,27 +479,9 @@ exports[`built-in plugins introspects mods 1`] = `
               },
               {
                 "$": {
-                  "name": "colorPrimaryDark",
-                },
-                "_": "#000FFF",
-              },
-              {
-                "$": {
-                  "name": "navigationBarColor",
-                },
-                "_": "#ff0000",
-              },
-              {
-                "$": {
                   "name": "activityBackground",
                 },
                 "_": "#ff0000",
-              },
-              {
-                "$": {
-                  "name": "notification_icon_color",
-                },
-                "_": "green",
               },
             ],
           },
@@ -782,15 +747,9 @@ exports[`built-in plugins introspects mods 1`] = `
             "type": "empty",
           },
           {
-            "type": "comment",
-            "value": "Specifies whether the app is configured to use edge-to-edge via the app config or plugin
-# WARNING: This property has been deprecated and will be removed in Expo SDK 55. Use \`edgeToEdgeEnabled\` or \`react.edgeToEdgeEnabled\` to determine whether the project is using edge-to-edge.",
-          },
-          {
-            "key": "expo.edgeToEdgeEnabled",
+            "key": "expo.inlineModules.watchedDirectories",
             "type": "property",
-            "value": "true
-",
+            "value": "[]",
           },
         ],
         "manifest": {
@@ -814,7 +773,7 @@ exports[`built-in plugins introspects mods 1`] = `
                 "activity": [
                   {
                     "$": {
-                      "android:configChanges": "keyboard|keyboardHidden|orientation|screenSize|screenLayout|uiMode",
+                      "android:configChanges": "keyboard|keyboardHidden|orientation|screenSize|screenLayout|uiMode|smallestScreenSize",
                       "android:exported": "true",
                       "android:launchMode": "singleTask",
                       "android:name": ".MainActivity",
@@ -930,30 +889,6 @@ exports[`built-in plugins introspects mods 1`] = `
                   },
                   {
                     "$": {
-                      "android:name": "expo.modules.notifications.default_notification_icon",
-                      "android:resource": "@drawable/notification_icon",
-                    },
-                  },
-                  {
-                    "$": {
-                      "android:name": "expo.modules.notifications.default_notification_color",
-                      "android:resource": "@color/notification_icon_color",
-                    },
-                  },
-                  {
-                    "$": {
-                      "android:name": "com.google.android.gms.ads.APPLICATION_ID",
-                      "android:value": "MY_GOOGLE_MOBILE_ADS_APP_ID",
-                    },
-                  },
-                  {
-                    "$": {
-                      "android:name": "com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT",
-                      "android:value": "false",
-                    },
-                  },
-                  {
-                    "$": {
                       "android:name": "com.google.android.geo.API_KEY",
                       "android:value": "MY_GOOGLE_MAPS_ANDROID_KEY",
                     },
@@ -1016,12 +951,16 @@ exports[`built-in plugins introspects mods 1`] = `
               },
               {
                 "$": {
+                  "android:maxSdkVersion": "32",
                   "android:name": "android.permission.READ_EXTERNAL_STORAGE",
+                  "tools:replace": "android:maxSdkVersion",
                 },
               },
               {
                 "$": {
+                  "android:maxSdkVersion": "32",
                   "android:name": "android.permission.WRITE_EXTERNAL_STORAGE",
+                  "tools:replace": "android:maxSdkVersion",
                 },
               },
               {
@@ -1072,13 +1011,6 @@ exports[`built-in plugins introspects mods 1`] = `
               },
               {
                 "$": {
-                  "name": "expo_splash_screen_status_bar_translucent",
-                  "translatable": "false",
-                },
-                "_": "true",
-              },
-              {
-                "$": {
                   "name": "expo_runtime_version",
                 },
                 "_": "1.0",
@@ -1100,13 +1032,6 @@ exports[`built-in plugins introspects mods 1`] = `
                 "item": [
                   {
                     "$": {
-                      "name": "android:enforceNavigationBarContrast",
-                      "tools:targetApi": "29",
-                    },
-                    "_": "true",
-                  },
-                  {
-                    "$": {
                       "name": "android:editTextBackground",
                     },
                     "_": "@drawable/rn_edit_text_material",
@@ -1122,18 +1047,6 @@ exports[`built-in plugins introspects mods 1`] = `
                       "name": "android:statusBarColor",
                     },
                     "_": "@android:color/transparent",
-                  },
-                  {
-                    "$": {
-                      "name": "android:windowLightNavigationBar",
-                    },
-                    "_": "true",
-                  },
-                  {
-                    "$": {
-                      "name": "android:navigationBarColor",
-                    },
-                    "_": "@color/navigationBarColor",
                   },
                   {
                     "$": {
@@ -1200,7 +1113,6 @@ exports[`built-in plugins introspects mods 1`] = `
             },
           ],
           "CFBundleVersion": "6.5.0",
-          "GADApplicationIdentifier": "TEST_googleMobileAdsAppId",
           "GMSApiKey": "TEST_googleMapsApiKey",
           "ITSAppUsesNonExemptEncryption": true,
           "LSMinimumSystemVersion": "12.0",
@@ -1210,7 +1122,6 @@ exports[`built-in plugins introspects mods 1`] = `
             "NSAllowsLocalNetworking": true,
           },
           "NSLocationWhenInUseUsageDescription": "Allow $(PRODUCT_NAME) to access your location",
-          "RCTNewArchEnabled": true,
           "UILaunchStoryboardName": "SplashScreen",
           "UIRequiredDeviceCapabilities": [
             "arm64",
@@ -1233,6 +1144,7 @@ exports[`built-in plugins introspects mods 1`] = `
         },
         "podfileProperties": {
           "EX_DEV_CLIENT_NETWORK_INSPECTOR": "true",
+          "expo.inlineModules.watchedDirectories": "[]",
           "expo.jsEngine": "hermes",
         },
         "splashScreenStoryboard": {
@@ -1459,10 +1371,6 @@ exports[`built-in plugins introspects mods 1`] = `
       },
     },
     "pluginHistory": {
-      "expo-ads-admob": {
-        "name": "expo-ads-admob",
-        "version": "UNVERSIONED",
-      },
       "expo-apple-authentication": {
         "name": "expo-apple-authentication",
         "version": "UNVERSIONED",
@@ -1473,10 +1381,6 @@ exports[`built-in plugins introspects mods 1`] = `
       },
       "expo-document-picker": {
         "name": "expo-document-picker",
-        "version": "UNVERSIONED",
-      },
-      "expo-navigation-bar": {
-        "name": "expo-navigation-bar",
         "version": "UNVERSIONED",
       },
       "expo-notifications": {
@@ -1625,7 +1529,6 @@ exports[`built-in plugins introspects mods 1`] = `
         },
       ],
       "CFBundleVersion": "6.5.0",
-      "GADApplicationIdentifier": "TEST_googleMobileAdsAppId",
       "GMSApiKey": "TEST_googleMapsApiKey",
       "ITSAppUsesNonExemptEncryption": true,
       "LSMinimumSystemVersion": "12.0",
@@ -1635,7 +1538,6 @@ exports[`built-in plugins introspects mods 1`] = `
         "NSAllowsLocalNetworking": true,
       },
       "NSLocationWhenInUseUsageDescription": "Allow $(PRODUCT_NAME) to access your location",
-      "RCTNewArchEnabled": true,
       "UILaunchStoryboardName": "SplashScreen",
       "UIRequiredDeviceCapabilities": [
         "arm64",
@@ -1671,13 +1573,6 @@ exports[`built-in plugins introspects mods 1`] = `
     },
   },
   "name": "my cool app",
-  "notification": {
-    "androidCollapsedTitle": "#{unread_notifications} new interactions",
-    "androidMode": "collapse",
-    "color": "green",
-    "icon": "./icons/notification-icon.png",
-    "iosDisplayInForeground": true,
-  },
   "orientation": "default",
   "packagerOpts": {
     "extraThing": true,
@@ -1720,18 +1615,6 @@ exports[`built-in plugins introspects mods in a managed project 1`] = `
               },
               {
                 "$": {
-                  "name": "colorPrimaryDark",
-                },
-                "_": "#000FFF",
-              },
-              {
-                "$": {
-                  "name": "navigationBarColor",
-                },
-                "_": "#ff0000",
-              },
-              {
-                "$": {
                   "name": "splashscreen_background",
                 },
                 "_": "#ff00ff",
@@ -1741,12 +1624,6 @@ exports[`built-in plugins introspects mods in a managed project 1`] = `
                   "name": "activityBackground",
                 },
                 "_": "#ff0000",
-              },
-              {
-                "$": {
-                  "name": "notification_icon_color",
-                },
-                "_": "green",
               },
             ],
           },
@@ -1765,32 +1642,14 @@ exports[`built-in plugins introspects mods in a managed project 1`] = `
         },
         "gradleProperties": [
           {
-            "type": "comment",
-            "value": "Specifies whether the app is configured to use edge-to-edge via the app config or plugin
-# WARNING: This property has been deprecated and will be removed in Expo SDK 55. Use \`edgeToEdgeEnabled\` or \`react.edgeToEdgeEnabled\` to determine whether the project is using edge-to-edge.",
-          },
-          {
-            "key": "expo.edgeToEdgeEnabled",
-            "type": "property",
-            "value": "true
-",
-          },
-          {
-            "type": "comment",
-            "value": "Use this property to enable edge-to-edge display support.
-# This allows your app to draw behind system bars for an immersive UI.
-# Note: Only works with ReactActivity and should not be used with custom Activity.",
-          },
-          {
-            "key": "edgeToEdgeEnabled",
-            "type": "property",
-            "value": "true
-",
-          },
-          {
             "key": "hermesEnabled",
             "type": "property",
             "value": "true",
+          },
+          {
+            "key": "expo.inlineModules.watchedDirectories",
+            "type": "property",
+            "value": "[]",
           },
         ],
         "manifest": {
@@ -1815,7 +1674,7 @@ exports[`built-in plugins introspects mods in a managed project 1`] = `
                 "activity": [
                   {
                     "$": {
-                      "android:configChanges": "keyboard|keyboardHidden|orientation|screenSize|screenLayout|uiMode",
+                      "android:configChanges": "keyboard|keyboardHidden|orientation|screenSize|screenLayout|uiMode|smallestScreenSize",
                       "android:exported": "true",
                       "android:launchMode": "singleTask",
                       "android:name": ".MainActivity",
@@ -1931,30 +1790,6 @@ exports[`built-in plugins introspects mods in a managed project 1`] = `
                   },
                   {
                     "$": {
-                      "android:name": "expo.modules.notifications.default_notification_icon",
-                      "android:resource": "@drawable/notification_icon",
-                    },
-                  },
-                  {
-                    "$": {
-                      "android:name": "expo.modules.notifications.default_notification_color",
-                      "android:resource": "@color/notification_icon_color",
-                    },
-                  },
-                  {
-                    "$": {
-                      "android:name": "com.google.android.gms.ads.APPLICATION_ID",
-                      "android:value": "MY_GOOGLE_MOBILE_ADS_APP_ID",
-                    },
-                  },
-                  {
-                    "$": {
-                      "android:name": "com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT",
-                      "android:value": "false",
-                    },
-                  },
-                  {
-                    "$": {
                       "android:name": "com.google.android.geo.API_KEY",
                       "android:value": "MY_GOOGLE_MAPS_ANDROID_KEY",
                     },
@@ -2017,12 +1852,16 @@ exports[`built-in plugins introspects mods in a managed project 1`] = `
               },
               {
                 "$": {
+                  "android:maxSdkVersion": "32",
                   "android:name": "android.permission.READ_EXTERNAL_STORAGE",
+                  "tools:replace": "android:maxSdkVersion",
                 },
               },
               {
                 "$": {
+                  "android:maxSdkVersion": "32",
                   "android:name": "android.permission.WRITE_EXTERNAL_STORAGE",
+                  "tools:replace": "android:maxSdkVersion",
                 },
               },
               {
@@ -2073,13 +1912,6 @@ exports[`built-in plugins introspects mods in a managed project 1`] = `
               },
               {
                 "$": {
-                  "name": "expo_splash_screen_status_bar_translucent",
-                  "translatable": "false",
-                },
-                "_": "true",
-              },
-              {
-                "$": {
                   "name": "expo_runtime_version",
                 },
                 "_": "1.0",
@@ -2110,18 +1942,6 @@ exports[`built-in plugins introspects mods in a managed project 1`] = `
                       "name": "android:statusBarColor",
                     },
                     "_": "@android:color/transparent",
-                  },
-                  {
-                    "$": {
-                      "name": "android:windowLightNavigationBar",
-                    },
-                    "_": "true",
-                  },
-                  {
-                    "$": {
-                      "name": "android:navigationBarColor",
-                    },
-                    "_": "@color/navigationBarColor",
                   },
                   {
                     "$": {
@@ -2188,7 +2008,6 @@ exports[`built-in plugins introspects mods in a managed project 1`] = `
             },
           ],
           "CFBundleVersion": "6.5.0",
-          "GADApplicationIdentifier": "TEST_googleMobileAdsAppId",
           "GMSApiKey": "TEST_googleMapsApiKey",
           "ITSAppUsesNonExemptEncryption": true,
           "LSMinimumSystemVersion": "12.0",
@@ -2202,7 +2021,6 @@ exports[`built-in plugins introspects mods in a managed project 1`] = `
             },
           },
           "NSLocationWhenInUseUsageDescription": "Allow $(PRODUCT_NAME) to access your location",
-          "RCTNewArchEnabled": true,
           "UILaunchStoryboardName": "SplashScreen",
           "UIRequiredDeviceCapabilities": [
             "armv7",
@@ -2224,6 +2042,7 @@ exports[`built-in plugins introspects mods in a managed project 1`] = `
           },
         },
         "podfileProperties": {
+          "expo.inlineModules.watchedDirectories": "[]",
           "expo.jsEngine": "hermes",
         },
         "splashScreenStoryboard": {
@@ -2440,10 +2259,6 @@ exports[`built-in plugins introspects mods in a managed project 1`] = `
       },
     },
     "pluginHistory": {
-      "expo-ads-admob": {
-        "name": "expo-ads-admob",
-        "version": "UNVERSIONED",
-      },
       "expo-apple-authentication": {
         "name": "expo-apple-authentication",
         "version": "UNVERSIONED",
@@ -2454,10 +2269,6 @@ exports[`built-in plugins introspects mods in a managed project 1`] = `
       },
       "expo-document-picker": {
         "name": "expo-document-picker",
-        "version": "UNVERSIONED",
-      },
-      "expo-navigation-bar": {
-        "name": "expo-navigation-bar",
         "version": "UNVERSIONED",
       },
       "expo-notifications": {
@@ -2606,7 +2417,6 @@ exports[`built-in plugins introspects mods in a managed project 1`] = `
         },
       ],
       "CFBundleVersion": "6.5.0",
-      "GADApplicationIdentifier": "TEST_googleMobileAdsAppId",
       "GMSApiKey": "TEST_googleMapsApiKey",
       "ITSAppUsesNonExemptEncryption": true,
       "LSMinimumSystemVersion": "12.0",
@@ -2620,7 +2430,6 @@ exports[`built-in plugins introspects mods in a managed project 1`] = `
         },
       },
       "NSLocationWhenInUseUsageDescription": "Allow $(PRODUCT_NAME) to access your location",
-      "RCTNewArchEnabled": true,
       "UILaunchStoryboardName": "SplashScreen",
       "UIRequiredDeviceCapabilities": [
         "armv7",
@@ -2656,13 +2465,6 @@ exports[`built-in plugins introspects mods in a managed project 1`] = `
     },
   },
   "name": "my cool app",
-  "notification": {
-    "androidCollapsedTitle": "#{unread_notifications} new interactions",
-    "androidMode": "collapse",
-    "color": "green",
-    "icon": "./icons/notification-icon.png",
-    "iosDisplayInForeground": true,
-  },
   "orientation": "default",
   "packagerOpts": {
     "extraThing": true,

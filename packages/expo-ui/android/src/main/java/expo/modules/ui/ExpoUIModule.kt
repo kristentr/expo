@@ -1,91 +1,74 @@
+@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
+
 package expo.modules.ui
 
-import android.graphics.Color
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
-import expo.modules.kotlin.jni.JavaScriptFunction
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
-import expo.modules.kotlin.viewevent.EventDispatcher
 import expo.modules.kotlin.viewevent.getValue
-import expo.modules.ui.button.Button
-import expo.modules.ui.menu.ContextMenu
-import kotlin.reflect.KProperty
+import expo.modules.ui.button.ButtonContent
+import expo.modules.ui.button.ButtonPressedEvent
+import expo.modules.ui.button.ButtonProps
+import expo.modules.ui.button.ElevatedButtonContent
+import expo.modules.ui.button.FilledTonalButtonContent
+import expo.modules.ui.button.OutlinedButtonContent
+import expo.modules.ui.button.TextButtonContent
+import expo.modules.ui.button.FloatingActionButtonContent
+import expo.modules.ui.button.FloatingActionButtonProps
+import expo.modules.ui.button.IconButtonContent
+import expo.modules.ui.button.FilledIconButtonContent
+import expo.modules.ui.button.FilledTonalIconButtonContent
+import expo.modules.ui.button.OutlinedIconButtonContent
+import expo.modules.ui.icon.IconView
+import expo.modules.ui.menu.DropdownMenuContent
+import expo.modules.ui.menu.DropdownMenuProps
+import expo.modules.ui.menu.DropdownMenuItemContent
+import expo.modules.ui.menu.DropdownMenuItemProps
+import expo.modules.ui.menu.ItemPressedEvent
+import okhttp3.OkHttpClient
 
 class ExpoUIModule : Module() {
+  var okHttpClient: OkHttpClient? = null
+    private set
+
   override fun definition() = ModuleDefinition {
     Name("ExpoUI")
 
-    Class("ExpoModifier", ExpoModifier::class) {
-      Constructor {
-        // Create an instance of ExpoModifier with a null reference
-        ExpoModifier(null)
+    OnCreate {
+      okHttpClient = OkHttpClient.Builder().build()
+    }
+
+    OnDestroy {
+      okHttpClient?.dispatcher?.executorService?.shutdown()
+      okHttpClient?.connectionPool?.evictAll()
+      okHttpClient?.cache?.close()
+      okHttpClient = null
+    }
+
+    //region Views use expo-modules-core DSL for uncommon features
+
+    View(HostView::class) {
+      Events("onLayoutContent")
+
+      OnViewDidUpdateProps { view ->
+        view.onViewDidUpdateProps()
       }
-
-      Function("toString") { ref: ExpoModifier ->
-        // Return a string representation of the modifier
-        "ExpoModifier(ref=${ref.ref})"
-      }
     }
 
-    View("BottomSheetView", events = {
-      Events("onIsOpenedChange")
-    }) { props: BottomSheetProps ->
-      val onIsOpenedChange by remember { EventDispatcher<IsOpenedChangeEvent>() }
-      BottomSheetContent(props) { onIsOpenedChange(it) }
+    Constant("SwitchDefaultIconSize") {
+      return@Constant SwitchDefaults.IconSize.value
+    }
+    Constant("ToggleButtonIconSpacing") {
+      return@Constant ToggleButtonDefaults.IconSpacing.value
+    }
+    Constant("ToggleButtonIconSize") {
+      return@Constant ToggleButtonDefaults.IconSize.value
     }
 
-    // Defines a single view for now – a single choice segmented control
-    View(PickerView::class) {
-      Events("onOptionSelected")
-    }
-
-    View(SwitchView::class) {
-      Events("onValueChange")
-    }
-
-    View(Button::class) {
-      Events("onButtonPressed")
-    }
-
-    View(SliderView::class) {
-      Events("onValueChanged")
-    }
-
-    View(ShapeView::class)
-
-    View(DateTimePickerView::class) {
-      Events("onDateSelected")
-    }
-
-    View(ContextMenu::class) {
-      Events(
-        "onContextMenuButtonPressed",
-        "onContextMenuPickerOptionSelected",
-        "onContextMenuSwitchValueChanged",
-        "onExpandedChanged"
-      )
-    }
-
-    View(ProgressView::class)
+    View(RNHostView::class)
 
     View(TextInputView::class) {
       Events("onValueChanged")
@@ -99,125 +82,360 @@ class ExpoUIModule : Module() {
       }
     }
 
-    View(BoxView::class)
-    View(RowView::class)
-    View(ColumnView::class)
-    View(HostView::class)
-    View(TextView::class)
-    View(CarouselView::class)
+    View(SlotView::class) {
+      Events("onSlotEvent")
+    }
+    View(IconView::class)
+    View(LazyColumnView::class)
 
-    View(AlertDialogView::class) {
+    //endregion Views use expo-modules-core DSL for uncommon features
+
+    //region Expo UI views
+
+    ExpoUIView("ModalBottomSheetView", events = {
+      Events("onDismissRequest")
+    }) { props: ModalBottomSheetProps ->
+      val onDismissRequest by remember { EventDispatcher<Unit>() }
+      ModalBottomSheetContent(props) { onDismissRequest(Unit) }
+    }
+
+    ExpoUIView("SingleChoiceSegmentedButtonRowView") { props: SingleChoiceSegmentedButtonRowProps ->
+      SingleChoiceSegmentedButtonRowContent(props)
+    }
+
+    ExpoUIView("MultiChoiceSegmentedButtonRowView") { props: MultiChoiceSegmentedButtonRowProps ->
+      MultiChoiceSegmentedButtonRowContent(props)
+    }
+
+    ExpoUIView("SegmentedButtonView", events = {
+      Events("onButtonPressed", "onCheckedChange")
+    }) { props: SegmentedButtonProps ->
+      val onButtonPressed by remember { EventDispatcher<Unit>() }
+      val onCheckedChange by remember { EventDispatcher<GenericEventPayload1<Boolean>>() }
+      SegmentedButtonContent(props, { onButtonPressed(Unit) }, { onCheckedChange(it) })
+    }
+
+    ExpoUIView("SwitchView", events = {
+      Events("onCheckedChange")
+    }) { props: SwitchProps ->
+      val onCheckedChange by remember { EventDispatcher<CheckedChangeEvent>() }
+      SwitchContent(props) { value -> onCheckedChange(CheckedChangeEvent(value)) }
+    }
+
+    ExpoUIView("CheckboxView", events = {
+      Events("onCheckedChange")
+    }) { props: CheckboxProps ->
+      val onCheckedChange by remember { EventDispatcher<CheckedChangeEvent>() }
+      CheckboxContent(props) { value -> onCheckedChange(CheckedChangeEvent(value)) }
+    }
+
+    ExpoUIView("TriStateCheckboxView", events = {
+      Events("onNativeClick")
+    }) { props: TriStateCheckboxProps ->
+      val onNativeClick by remember { EventDispatcher<Unit>() }
+      TriStateCheckboxContent(props) { onNativeClick(Unit) }
+    }
+
+    ExpoUIView("Button", events = {
+      Events("onButtonPressed")
+    }) { props: ButtonProps ->
+      val onButtonPressed by remember { EventDispatcher<ButtonPressedEvent>() }
+      ButtonContent(props) { onButtonPressed(it) }
+    }
+
+    ExpoUIView("FilledTonalButton", events = {
+      Events("onButtonPressed")
+    }) { props: ButtonProps ->
+      val onButtonPressed by remember { EventDispatcher<ButtonPressedEvent>() }
+      FilledTonalButtonContent(props) { onButtonPressed(it) }
+    }
+
+    ExpoUIView("OutlinedButton", events = {
+      Events("onButtonPressed")
+    }) { props: ButtonProps ->
+      val onButtonPressed by remember { EventDispatcher<ButtonPressedEvent>() }
+      OutlinedButtonContent(props) { onButtonPressed(it) }
+    }
+
+    ExpoUIView("ElevatedButton", events = {
+      Events("onButtonPressed")
+    }) { props: ButtonProps ->
+      val onButtonPressed by remember { EventDispatcher<ButtonPressedEvent>() }
+      ElevatedButtonContent(props) { onButtonPressed(it) }
+    }
+
+    ExpoUIView("TextButton", events = {
+      Events("onButtonPressed")
+    }) { props: ButtonProps ->
+      val onButtonPressed by remember { EventDispatcher<ButtonPressedEvent>() }
+      TextButtonContent(props) { onButtonPressed(it) }
+    }
+
+    ExpoUIView("IconButton", events = {
+      Events("onButtonPressed")
+    }) { props: ButtonProps ->
+      val onButtonPressed by remember { EventDispatcher<ButtonPressedEvent>() }
+      IconButtonContent(props) { onButtonPressed(it) }
+    }
+
+    ExpoUIView("FilledIconButton", events = {
+      Events("onButtonPressed")
+    }) { props: ButtonProps ->
+      val onButtonPressed by remember { EventDispatcher<ButtonPressedEvent>() }
+      FilledIconButtonContent(props) { onButtonPressed(it) }
+    }
+
+    ExpoUIView("FilledTonalIconButton", events = {
+      Events("onButtonPressed")
+    }) { props: ButtonProps ->
+      val onButtonPressed by remember { EventDispatcher<ButtonPressedEvent>() }
+      FilledTonalIconButtonContent(props) { onButtonPressed(it) }
+    }
+
+    ExpoUIView("OutlinedIconButton", events = {
+      Events("onButtonPressed")
+    }) { props: ButtonProps ->
+      val onButtonPressed by remember { EventDispatcher<ButtonPressedEvent>() }
+      OutlinedIconButtonContent(props) { onButtonPressed(it) }
+    }
+
+    ExpoUIView("SliderView", events = {
+      Events("onValueChange", "onValueChangeFinished")
+    }) { props: SliderProps ->
+      SliderContent(props)
+    }
+
+    ExpoUIView("ShapeView") { props: ShapeProps ->
+      ShapeContent(props)
+    }
+
+    ExpoUIView("DividerView") { props: DividerProps ->
+      DividerContent(props)
+    }
+
+    ExpoUIView("DateTimePickerView", events = {
+      Events("onDateSelected")
+    }) { props: DateTimePickerProps ->
+      val onDateSelected by remember { EventDispatcher<DatePickerResult>() }
+      DateTimePickerContent(props) { onDateSelected(it) }
+    }
+
+    ExpoUIView("DatePickerDialogView", events = {
+      Events("onDateSelected", "onDismissRequest")
+    }) { props: DatePickerDialogProps ->
+      val onDateSelected by remember { EventDispatcher<DatePickerResult>() }
+      val onDismissRequest by remember { EventDispatcher<Unit>() }
+      ExpoDatePickerDialogContent(props, { onDateSelected(it) }, { onDismissRequest(Unit) })
+    }
+
+    ExpoUIView("TimePickerDialogView", events = {
+      Events("onDateSelected", "onDismissRequest")
+    }) { props: TimePickerDialogProps ->
+      val onDateSelected by remember { EventDispatcher<DatePickerResult>() }
+      val onDismissRequest by remember { EventDispatcher<Unit>() }
+      ExpoTimePickerDialogContent(props, { onDateSelected(it) }, { onDismissRequest(Unit) })
+    }
+
+    ExpoUIView("DropdownMenuView", events = {
+      Events("onDismissRequest")
+    }) { props: DropdownMenuProps ->
+      val onDismissRequest by remember { EventDispatcher<Unit>() }
+      DropdownMenuContent(props) { onDismissRequest(Unit) }
+    }
+
+    ExpoUIView("DropdownMenuItemView", events = {
+      Events("onItemPressed")
+    }) { props: DropdownMenuItemProps ->
+      val onItemPressed by remember { EventDispatcher<ItemPressedEvent>() }
+      DropdownMenuItemContent(props) { onItemPressed(it) }
+    }
+
+    ExpoUIView("LinearProgressIndicatorView") { props: LinearProgressIndicatorProps ->
+      LinearProgressIndicatorContent(props)
+    }
+
+    ExpoUIView("CircularProgressIndicatorView") { props: CircularProgressIndicatorProps ->
+      CircularProgressIndicatorContent(props)
+    }
+
+    ExpoUIView("LinearWavyProgressIndicatorView") { props: LinearWavyProgressIndicatorProps ->
+      LinearWavyProgressIndicatorContent(props)
+    }
+
+    ExpoUIView("CircularWavyProgressIndicatorView") { props: CircularWavyProgressIndicatorProps ->
+      CircularWavyProgressIndicatorContent(props)
+    }
+
+    ExpoUIView("BoxView") { props: LayoutProps ->
+      BoxContent(props)
+    }
+
+    ExpoUIView("RowView") { props: LayoutProps ->
+      RowContent(props)
+    }
+
+    ExpoUIView("FlowRowView") { props: LayoutProps ->
+      FlowRowContent(props)
+    }
+
+    ExpoUIView("ColumnView") { props: LayoutProps ->
+      ColumnContent(props)
+    }
+
+    ExpoUIView("TextView") { props: TextProps ->
+      TextContent(props)
+    }
+
+    ExpoUIView("SearchBarView", events = {
+      Events("onSearch")
+    }) { props: SearchBarProps ->
+      val onSearch by remember { EventDispatcher<GenericEventPayload1<String>>() }
+      SearchBarContent(props) { onSearch(it) }
+    }
+
+    ExpoUIView("DockedSearchBarView", events = {
+      Events("onQueryChange")
+    }) { props: DockedSearchBarProps ->
+      val onQueryChange by remember { EventDispatcher<GenericEventPayload1<String>>() }
+      DockedSearchBarContent(props) { onQueryChange(it) }
+    }
+
+    ExpoUIView("HorizontalFloatingToolbarView") { props: HorizontalFloatingToolbarProps ->
+      HorizontalFloatingToolbarContent(props)
+    }
+
+    ExpoUIView("PullToRefreshBoxView", events = {
+      Events("onRefresh")
+    }) { props: PullToRefreshBoxProps ->
+      val onRefresh by remember { EventDispatcher<Unit>() }
+      PullToRefreshBoxContent(props) { onRefresh(Unit) }
+    }
+
+    ExpoUIView("CarouselView") { props: CarouselProps ->
+      CarouselContent(props)
+    }
+
+    ExpoUIView("AlertDialogView", events = {
       Events(
         "onDismissPressed",
         "onConfirmPressed"
       )
-    }
-
-    View(ChipView::class) {
-      Events(
-        "onPress",
-        "onDismiss"
+    }) { props: AlertDialogProps ->
+      val onDismissPressed by remember { EventDispatcher<AlertDialogButtonPressedEvent>() }
+      val onConfirmPressed by remember { EventDispatcher<AlertDialogButtonPressedEvent>() }
+      AlertDialogContent(
+        props,
+        { onDismissPressed(it) },
+        { onConfirmPressed(it) }
       )
     }
 
-    Function("paddingAll") { all: Int ->
-      return@Function ExpoModifier(Modifier.padding(all.dp))
+    ExpoUIView("AssistChipView", events = {
+      Events("onNativeClick")
+    }) { props: AssistChipProps ->
+      val onNativeClick by remember { EventDispatcher<ChipPressedEvent>() }
+      AssistChipContent(props) { onNativeClick(it) }
     }
 
-    Function("padding") { start: Int, top: Int, end: Int, bottom: Int ->
-      return@Function ExpoModifier(Modifier.padding(start.dp, top.dp, end.dp, bottom.dp))
+    ExpoUIView("InputChipView", events = {
+      Events("onNativeClick")
+    }) { props: InputChipProps ->
+      val onNativeClick by remember { EventDispatcher<ChipPressedEvent>() }
+      InputChipContent(props) { onNativeClick(it) }
     }
 
-    Function("size") { width: Int, height: Int ->
-      return@Function ExpoModifier(Modifier.size(width.dp, height.dp))
+    ExpoUIView("SuggestionChipView", events = {
+      Events("onNativeClick")
+    }) { props: SuggestionChipProps ->
+      val onNativeClick by remember { EventDispatcher<ChipPressedEvent>() }
+      SuggestionChipContent(props) { onNativeClick(it) }
     }
 
-    Function("fillMaxSize") {
-      return@Function ExpoModifier(Modifier.fillMaxSize())
+    ExpoUIView("FilterChipView", events = {
+      Events("onNativeClick")
+    }) { props: FilterChipProps ->
+      val onNativeClick by remember { EventDispatcher<ChipPressedEvent>() }
+      FilterChipContent(props) { onNativeClick(it) }
     }
 
-    Function("offset") { x: Int, y: Int ->
-      return@Function ExpoModifier(Modifier.offset(x.dp, y.dp))
+    ExpoUIView("ToggleButton", events = {
+      Events("onCheckedChange")
+    }) { props: ToggleButtonProps ->
+      val onCheckedChange by remember { EventDispatcher<ToggleButtonValueChangeEvent>() }
+      ToggleButtonContent(props) { onCheckedChange(it) }
     }
 
-    Function("background") { color: Color ->
-      return@Function ExpoModifier(Modifier.background(color.compose))
+    ExpoUIView("IconToggleButton", events = {
+      Events("onCheckedChange")
+    }) { props: ToggleButtonProps ->
+      val onCheckedChange by remember { EventDispatcher<ToggleButtonValueChangeEvent>() }
+      IconToggleButtonContent(props) { onCheckedChange(it) }
     }
 
-    Function("border") { borderWidth: Int, borderColor: Color ->
-      return@Function ExpoModifier(Modifier.border(BorderStroke(borderWidth.dp, borderColor.compose)))
+    ExpoUIView("FilledIconToggleButton", events = {
+      Events("onCheckedChange")
+    }) { props: ToggleButtonProps ->
+      val onCheckedChange by remember { EventDispatcher<ToggleButtonValueChangeEvent>() }
+      FilledIconToggleButtonContent(props) { onCheckedChange(it) }
     }
 
-    Function("shadow") { elevation: Int ->
-      return@Function ExpoModifier(Modifier.shadow(elevation.dp)) // TODO: Support more options
+    ExpoUIView("OutlinedIconToggleButton", events = {
+      Events("onCheckedChange")
+    }) { props: ToggleButtonProps ->
+      val onCheckedChange by remember { EventDispatcher<ToggleButtonValueChangeEvent>() }
+      OutlinedIconToggleButtonContent(props) { onCheckedChange(it) }
     }
 
-    Function("alpha") { alpha: Float ->
-      return@Function ExpoModifier(Modifier.alpha(alpha))
+    ExpoUIView("CardView") { props: CardProps ->
+      CardContent(props)
     }
 
-    Function("blur") { radius: Int ->
-      return@Function ExpoModifier(Modifier.blur(radius.dp))
+    ExpoUIView("ElevatedCardView") { props: ElevatedCardProps ->
+      ElevatedCardContent(props)
     }
 
-    Function("clickable") { callback: JavaScriptFunction<Any?> ->
-      return@Function ExpoModifier(
-        Modifier.clickable(
-          onClick = {
-            appContext.executeOnJavaScriptThread {
-              callback.invoke()
-            }
-          }
-        )
-      )
+    ExpoUIView("OutlinedCardView") { props: OutlinedCardProps ->
+      OutlinedCardContent(props)
     }
 
-    Function("rotate") { degrees: Float ->
-      return@Function ExpoModifier(Modifier.rotate(degrees))
+    ExpoUIView("ListItemView") { props: ListItemProps ->
+      ListItemContent(props)
     }
 
-    Function("zIndex") { index: Float ->
-      return@Function ExpoModifier(Modifier.zIndex(index))
+    ExpoUIView("SpacerView") { props: SpacerProps ->
+      SpacerContent(props)
     }
 
-    Function("animateContentSize") { dampingRatio: Float?, stiffness: Float? ->
-      return@Function ExpoModifier(
-        Modifier.animateContentSize(
-          spring(dampingRatio = dampingRatio ?: Spring.DampingRatioNoBouncy, stiffness = stiffness ?: Spring.StiffnessMedium)
-        )
-      )
+    ExpoUIView("BasicAlertDialogView", events = {
+      Events("onDismissRequest")
+    }) { props: BasicAlertDialogProps ->
+      val onDismissRequest by remember { EventDispatcher<Unit>() }
+      BasicAlertDialogContent(props) { onDismissRequest(Unit) }
     }
 
-    Function("weight") { weight: Float ->
-      val scopedExpoModifier = ExpoModifier {
-        it.rowScope?.run {
-          Modifier.weight(weight)
-        } ?: it.columnScope?.run {
-          Modifier.weight(weight)
-        } ?: Modifier
-      }
-      return@Function scopedExpoModifier
+    ExpoUIView("SurfaceView") { props: SurfaceProps ->
+      SurfaceContent(props)
     }
 
-    Function("matchParentSize") {
-      val scopedExpoModifier = ExpoModifier {
-        it.boxScope?.run {
-          Modifier.matchParentSize()
-        } ?: Modifier
-      }
-      return@Function scopedExpoModifier
+    ExpoUIView("AnimatedVisibilityView") { props: AnimatedVisibilityProps ->
+      AnimatedVisibilityContent(props)
     }
 
-    Function("testID") { testID: String ->
-      return@Function ExpoModifier(Modifier.applyTestTag(testID))
+    ExpoUIView("RadioButtonView", events = {
+      Events("onButtonPressed")
+    }) { props: RadioButtonProps ->
+      val onButtonPressed by remember { EventDispatcher<Unit>() }
+      val clickHandler = if (props.clickable) { { onButtonPressed(Unit) } } else null
+      RadioButtonContent(props, clickHandler)
     }
 
-    Function("clip") { shapeRecord: ShapeRecord ->
-      val shape = shapeFromShapeRecord(shapeRecord)
-        ?: return@Function Modifier
-      return@Function ExpoModifier(Modifier.clip(shape))
+    ExpoUIView("FloatingActionButtonView", events = {
+      Events("onButtonPressed")
+    }) { props: FloatingActionButtonProps ->
+      val onButtonPressed by remember { EventDispatcher<Unit>() }
+      FloatingActionButtonContent(props) { onButtonPressed(Unit) }
     }
 
-    // TODO: Consider implementing semantics, layoutId, clip, navigationBarsPadding, systemBarsPadding
+    //endregion Expo UI views
   }
 }

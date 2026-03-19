@@ -74,6 +74,11 @@ export interface PaddingProps {
 }
 
 /**
+ * A closed date range with lower and upper bounds.
+ */
+export type ClosedRangeDate = { lower: Date; upper: Date };
+
+/**
  * Common props that can be applied to any view.
  */
 export interface CommonViewModifierProps {
@@ -88,7 +93,7 @@ export interface CommonViewModifierProps {
    *
    * @example
    * ```tsx
-   * import { background, cornerRadius, shadow, frame, padding, fixedSize } from 'expo-ui/swift-ui/modifiers';
+   * import { background, cornerRadius, shadow, frame, padding, fixedSize } from '@expo/ui/swift-ui/modifiers';
    *
    * <Text modifiers={[
    *   background('#FF0000'),

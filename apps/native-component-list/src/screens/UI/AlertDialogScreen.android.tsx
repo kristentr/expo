@@ -1,4 +1,4 @@
-import { AlertDialog, Button, Host } from '@expo/ui/jetpack-compose';
+import { AlertDialog, Button, Host, Text as ComposeText } from '@expo/ui/jetpack-compose';
 import * as React from 'react';
 
 import { ScrollPage, Section } from '../../components/Page';
@@ -13,8 +13,10 @@ export default function AlertDialogScreen() {
   return (
     <ScrollPage>
       <Section title="Alert Dialog">
-        <Host>
-          <Button onPress={() => setLargeDialogVisible(true)}>Open Large Alert Dialog</Button>
+        <Host matchContents>
+          <Button onClick={() => setLargeDialogVisible(true)}>
+            <ComposeText>Open Large Alert Dialog</ComposeText>
+          </Button>
 
           <AlertDialog
             title="Large Alert Dialog"
@@ -29,8 +31,10 @@ export default function AlertDialogScreen() {
       </Section>
 
       <Section title="Small Alert Dialog">
-        <Host>
-          <Button onPress={() => setSmallDialogVisible(true)}>Open Small Alert Dialog</Button>
+        <Host matchContents>
+          <Button onClick={() => setSmallDialogVisible(true)}>
+            <ComposeText>Open Small Alert Dialog</ComposeText>
+          </Button>
 
           <AlertDialog
             title="Small Alert Dialog"

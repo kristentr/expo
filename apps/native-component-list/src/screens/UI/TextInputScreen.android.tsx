@@ -1,4 +1,10 @@
-import { TextInput, TextInputRef, Button, Host } from '@expo/ui/jetpack-compose';
+import {
+  TextInput,
+  TextInputRef,
+  Button,
+  Host,
+  Text as ComposeText,
+} from '@expo/ui/jetpack-compose';
 import * as React from 'react';
 import { Text } from 'react-native';
 
@@ -12,14 +18,16 @@ export default function TextInputScreen() {
       <Section title="Current value">
         <Text>{JSON.stringify(value)}</Text>
       </Section>
-      <Button
-        onPress={async () => {
-          textRef.current?.setText('Hello there!');
-        }}>
-        Set text
-      </Button>
+      <Host matchContents>
+        <Button
+          onClick={async () => {
+            textRef.current?.setText('Hello there!');
+          }}>
+          <ComposeText>Set text</ComposeText>
+        </Button>
+      </Host>
       <Section title="Text Input">
-        <Host>
+        <Host matchContents>
           <TextInput
             ref={textRef}
             autocorrection={false}
@@ -29,7 +37,7 @@ export default function TextInputScreen() {
         </Host>
       </Section>
       <Section title="Multiline Text Input">
-        <Host>
+        <Host matchContents>
           <TextInput
             multiline
             numberOfLines={5}
@@ -40,7 +48,7 @@ export default function TextInputScreen() {
         </Host>
       </Section>
       <Section title="Phone Text Input">
-        <Host>
+        <Host matchContents>
           <TextInput
             multiline
             numberOfLines={5}
@@ -53,7 +61,7 @@ export default function TextInputScreen() {
       </Section>
 
       <Section title="Capitalization">
-        <Host>
+        <Host matchContents>
           <TextInput
             multiline
             numberOfLines={5}
