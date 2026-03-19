@@ -3,11 +3,27 @@ import ComponentListScreen, { componentScreensToListElements } from '../Componen
 
 export const UIScreens = [
   {
+    name: 'AnimatedVisibility component',
+    route: 'ui/animated-visibility',
+    options: {},
+    getComponent() {
+      return optionalRequire(() => require('./AnimatedVisibilityScreen'));
+    },
+  },
+  {
     name: 'AlertDialog component',
     route: 'ui/alert-dialog',
     options: {},
     getComponent() {
       return optionalRequire(() => require('./AlertDialogScreen'));
+    },
+  },
+  {
+    name: 'Card component',
+    route: 'ui/card',
+    options: {},
+    getComponent() {
+      return optionalRequire(() => require('./CardScreen'));
     },
   },
   {
@@ -19,11 +35,35 @@ export const UIScreens = [
     },
   },
   {
-    name: 'Picker component',
-    route: 'ui/picker',
+    name: 'Checkbox component',
+    route: 'ui/checkbox',
     options: {},
     getComponent() {
-      return optionalRequire(() => require('./PickerScreen'));
+      return optionalRequire(() => require('./CheckboxScreen'));
+    },
+  },
+  {
+    name: 'IconButton component',
+    route: 'ui/icon-button',
+    options: {},
+    getComponent() {
+      return optionalRequire(() => require('./IconButtonScreen'));
+    },
+  },
+  {
+    name: 'Radio Button component',
+    route: 'ui/radio-button',
+    options: {},
+    getComponent() {
+      return optionalRequire(() => require('./RadioButtonScreen'));
+    },
+  },
+  {
+    name: 'Segmented Control component',
+    route: 'ui/segmented-control',
+    options: {},
+    getComponent() {
+      return optionalRequire(() => require('./SegmentedControlScreen'));
     },
   },
   {
@@ -147,6 +187,14 @@ export const UIScreens = [
     },
   },
   {
+    name: 'ToggleButton component',
+    route: 'ui/toggle-button',
+    options: {},
+    getComponent() {
+      return optionalRequire(() => require('./ToggleButtonScreen'));
+    },
+  },
+  {
     name: 'FloatingActionButton component',
     route: 'ui/floating-action-button',
     options: {},
@@ -168,6 +216,14 @@ export const UIScreens = [
     options: {},
     getComponent() {
       return optionalRequire(() => require('./HorizontalFloatingToolbarScreen'));
+    },
+  },
+  {
+    name: 'Modifiers',
+    route: 'ui/modifiers',
+    options: {},
+    getComponent() {
+      return optionalRequire(() => require('./ModifiersScreen'));
     },
   },
 ];
